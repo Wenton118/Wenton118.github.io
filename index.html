@@ -1,0 +1,1086 @@
+
+1	<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html> 
+2	<html lang="tr"> 
+3	<head> 
+4	    <meta charset="UTF-8"> 
+5	    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+6	    <title>WENTON CYBER SECURITY</title> 
+7	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+8	    <style> 
+9	        * { 
+10	            margin: 0; 
+11	            padding: 0; 
+12	            box-sizing: border-box; 
+13	            font-family: 'Arial', sans-serif; 
+14	        } 
+15	         
+16	        body { 
+17	            background: linear-gradient(135deg, #0c0c1d, #1a1a2e); 
+18	            color: #fff; 
+19	            min-height: 100vh; 
+20	            overflow-x: hidden; 
+21	            position: relative; 
+22	            transition: background-color 0.5s ease; 
+23	        } 
+24	         
+25	        body.light-mode { 
+26	            background: linear-gradient(135deg, #f5f7fa, #e4e7eb); 
+27	            color: #000; 
+28	        } 
+29	         
+30	        #snow-canvas { 
+31	            position: fixed; 
+32	            top: 0; 
+33	            left: 0; 
+34	            width: 100%; 
+35	            height: 100%; 
+36	            pointer-events: none; 
+37	            z-index: -1; 
+38	        } 
+39	         
+40	        .container { 
+41	            max-width: 1200px; 
+42	            margin: 0 auto; 
+43	            padding: 20px; 
+44	            display: flex; 
+45	            flex-direction: column; 
+46	            align-items: center; 
+47	            min-height: 100vh; 
+48	            position: relative; 
+49	        } 
+50	         
+51	        .header { 
+52	            text-align: center; 
+53	            margin-bottom: 30px; 
+54	            width: 100%; 
+55	            padding-top: 40px; 
+56	        } 
+57	         
+58	        .title { 
+59	            font-size: 2.8rem; 
+60	            margin-bottom: 30px; 
+61	            color: #ff3333; 
+62	            text-shadow: 0 0 15px rgba(255, 51, 51, 0.8); 
+63	            letter-spacing: 2px; 
+64	            position: relative; 
+65	            display: inline-block; 
+66	        } 
+67	         
+68	        .title::after { 
+69	            content: ""; 
+70	            position: absolute; 
+71	            bottom: -10px; 
+72	            left: 50%; 
+73	            transform: translateX(-50%); 
+74	            width: 80%; 
+75	            height: 3px; 
+76	            background: linear-gradient(90deg, transparent, #ff3333, transparent); 
+77	        } 
+78	         
+79	        /* Yuvarlak Atatürk görseli */ 
+80	        .top-box { 
+81	            width: 320px; 
+82	            height: 320px; 
+83	            margin: 0 auto 20px; 
+84	            border-radius: 50%; 
+85	            overflow: hidden; 
+86	            position: relative; 
+87	            box-shadow: 0 0 30px rgba(255, 51, 51, 0.8), 
+88	                        0 0 60px rgba(255, 51, 51, 0.4), 
+89	                        0 0 100px rgba(255, 51, 51, 0.2), 
+90	                        inset 0 0 20px rgba(0, 0, 0, 0.8); 
+91	            border: 6px solid #ff3333; 
+92	            transition: transform 0.5s ease; 
+93	        } 
+94	         
+95	        .top-box:hover { 
+96	            transform: scale(1.03); 
+97	        } 
+98	         
+99	        .video-placeholder { 
+100	            width: 100%; 
+101	            height: 100%; 
+102	            background: linear-gradient(45deg, #1a1a1a, #0d0d0d); 
+103	            display: flex; 
+104	            justify-content: center; 
+105	            align-items: center; 
+106	            position: relative; 
+107	            border-radius: 50%; 
+108	            overflow: hidden; 
+109	        } 
+110	         
+111	        .video-placeholder::before { 
+112	            content: ""; 
+113	            position: absolute; 
+114	            width: 100%; 
+115	            height: 100%; 
+116	            background: url('https://upload.wikimedia.org/wikipedia/commons/a/a8/Ataturk1930s.jpg') center/cover no-repeat; 
+117	            filter: grayscale(20%) brightness(95%) contrast(120%); 
+118	        } 
+119	         
+120	        .wenton-text { 
+121	            position: absolute; 
+122	            bottom: -45px; 
+123	            left: 50%; 
+124	            transform: translateX(-50%); 
+125	            font-size: 2rem; 
+126	            font-weight: bold; 
+127	            color: rgba(255, 255, 255, 0.9); 
+128	            text-shadow: 0 0 15px rgba(255, 51, 51, 0.9); 
+129	            letter-spacing: 4px; 
+130	            background: rgba(0, 0, 0, 0.6); 
+131	            padding: 8px 25px; 
+132	            border-radius: 15px; 
+133	            backdrop-filter: blur(5px); 
+134	            z-index: 3; 
+135	            border: 2px solid rgba(255, 51, 51, 0.5); 
+136	            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
+137	        } 
+138	         
+139	        .led-box { 
+140	            width: 650px; 
+141	            height: 250px; 
+142	            border: 4px solid #333; 
+143	            border-radius: 15px; 
+144	            position: relative; 
+145	            margin: 70px auto 20px; 
+146	            overflow: hidden; 
+147	            background: linear-gradient(45deg, #0a0a0a, #1a1a1a); 
+148	            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 
+149	                        inset 0 0 20px rgba(0, 0, 0, 0.7); 
+150	        } 
+151	         
+152	        .led-border { 
+153	            position: absolute; 
+154	            width: 100%; 
+155	            height: 100%; 
+156	            border-radius: 12px; 
+157	            background: linear-gradient(90deg,  
+158	                rgba(255, 0, 0, 0) 0%,  
+159	                rgba(255, 0, 0, 0.8) 50%,  
+160	                rgba(255, 0, 0, 0) 100%); 
+161	            animation: led-animation 3s linear infinite; 
+162	            z-index: 1; 
+163	        } 
+164	         
+165	        @keyframes led-animation { 
+166	            0% { 
+167	                transform: translateX(-100%); 
+168	            } 
+169	            100% { 
+170	                transform: translateX(100%); 
+171	            } 
+172	        } 
+173	         
+174	        .text-container { 
+175	            position: absolute; 
+176	            top: 0; 
+177	            left: 0; 
+178	            width: 100%; 
+179	            height: 100%; 
+180	            display: flex; 
+181	            justify-content: center; 
+182	            align-items: center; 
+183	            z-index: 2; 
+184	            padding: 20px; 
+185	        } 
+186	         
+187	        .changing-text { 
+188	            font-size: 3.2rem; 
+189	            font-weight: bold; 
+190	            text-transform: uppercase; 
+191	            letter-spacing: 3px; 
+192	            color: #fff; 
+193	            text-shadow: 0 0 15px rgba(255, 0, 0, 0.9); 
+194	            position: relative; 
+195	            text-align: center; 
+196	        } 
+197	         
+198	        .cursor { 
+199	            display: inline-block; 
+200	            width: 3px; 
+201	            height: 3.5rem; 
+202	            background-color: #ff3333; 
+203	            margin-left: 5px; 
+204	            animation: blink 0.7s infinite; 
+205	            vertical-align: middle; 
+206	        } 
+207	         
+208	        @keyframes blink { 
+209	            0%, 100% { opacity: 1; } 
+210	            50% { opacity: 0; } 
+211	        } 
+212	         
+213	        .social-icons { 
+214	            position: fixed; 
+215	            bottom: 30px; 
+216	            right: 30px; 
+217	            display: flex; 
+218	            flex-direction: column; 
+219	            gap: 20px; 
+220	            z-index: 10; 
+221	        } 
+222	         
+223	        .social-icon { 
+224	            width: 65px; 
+225	            height: 65px; 
+226	            border-radius: 50%; 
+227	            display: flex; 
+228	            justify-content: center; 
+229	            align-items: center; 
+230	            background: #ff3333; 
+231	            color: white; 
+232	            font-size: 1.8rem; 
+233	            cursor: pointer; 
+234	            transition: all 0.3s ease; 
+235	            box-shadow: 0 5px 15px rgba(255, 51, 51, 0.7); 
+236	            position: relative; 
+237	            overflow: hidden; 
+238	        } 
+239	         
+240	        .social-icon:hover { 
+241	            transform: scale(1.1); 
+242	            box-shadow: 0 0 25px rgba(255, 51, 51, 1); 
+243	        } 
+244	         
+245	        .social-icon::before { 
+246	            content: ""; 
+247	            position: absolute; 
+248	            top: 0; 
+249	            left: -100%; 
+250	            width: 100%; 
+251	            height: 100%; 
+252	            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); 
+253	            transition: 0.5s; 
+254	        } 
+255	         
+256	        .social-icon:hover::before { 
+257	            left: 100%; 
+258	        } 
+259	         
+260	        #youtube { 
+261	            background: #ff0000; 
+262	            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.7); 
+263	        } 
+264	         
+265	        #youtube:hover { 
+266	            box-shadow: 0 0 25px rgba(255, 0, 0, 1); 
+267	        } 
+268	         
+269	        .theme-toggle { 
+270	            position: fixed; 
+271	            bottom: 30px; 
+272	            left: 30px; 
+273	            width: 65px; 
+274	            height: 65px; 
+275	            border-radius: 50%; 
+276	            display: flex; 
+277	            justify-content: center; 
+278	            align-items: center; 
+279	            background: #ffcc00; 
+280	            color: #000; 
+281	            font-size: 1.8rem; 
+282	            cursor: pointer; 
+283	            transition: all 0.3s ease; 
+284	            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.7); 
+285	            z-index: 10; 
+286	        } 
+287	         
+288	        .theme-toggle:hover { 
+289	            transform: scale(1.1); 
+290	            box-shadow: 0 0 25px rgba(255, 204, 0, 1); 
+291	        } 
+292	         
+293	        .tech-icons { 
+294	            display: flex; 
+295	            justify-content: center; 
+296	            gap: 30px; 
+297	            margin-top: 30px; 
+298	            flex-wrap: wrap; 
+299	        } 
+300	         
+301	        .tech-icon { 
+302	            width: 70px; 
+303	            height: 70px; 
+304	            display: flex; 
+305	            justify-content: center; 
+306	            align-items: center; 
+307	            background: rgba(255, 255, 255, 0.1); 
+308	            border-radius: 15px; 
+309	            font-size: 2.5rem; 
+310	            color: #ff3333; 
+311	            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+312	            transition: all 0.3s ease; 
+313	            backdrop-filter: blur(5px); 
+314	        } 
+315	         
+316	        .tech-icon:hover { 
+317	            transform: translateY(-10px); 
+318	            background: rgba(255, 51, 51, 0.2); 
+319	            box-shadow: 0 10px 20px rgba(255, 51, 51, 0.4); 
+320	        } 
+321	         
+322	        /* İhbar Kutusu Stili */ 
+323	        .ihbar-box { 
+324	            width: 300px; 
+325	            height: 300px; 
+326	            margin: 40px auto; 
+327	            border-radius: 15px; 
+328	            overflow: hidden; 
+329	            position: relative; 
+330	            box-shadow: 0 0 25px rgba(255, 51, 51, 0.8), 
+331	                        0 0 50px rgba(255, 51, 51, 0.4), 
+332	                        0 0 80px rgba(255, 51, 51, 0.2); 
+333	            border: 4px solid #ff3333; 
+334	            transition: all 0.5s ease; 
+335	            cursor: pointer; 
+336	            background: linear-gradient(45deg, #1a1a1a, #0d0d0d); 
+337	            display: flex; 
+338	            flex-direction: column; 
+339	            justify-content: center; 
+340	            align-items: center; 
+341	            text-align: center; 
+342	            padding: 20px; 
+343	        } 
+344	         
+345	        .ihbar-box:hover { 
+346	            transform: scale(1.05); 
+347	            box-shadow: 0 0 35px rgba(255, 51, 51, 1); 
+348	        } 
+349	         
+350	        .ihbar-icon { 
+351	            font-size: 5rem; 
+352	            color: #ff3333; 
+353	            margin-bottom: 20px; 
+354	            text-shadow: 0 0 15px rgba(255, 51, 51, 0.7); 
+355	        } 
+356	         
+357	        .ihbar-title { 
+358	            font-size: 2.2rem; 
+359	            font-weight: bold; 
+360	            color: #fff; 
+361	            margin-bottom: 15px; 
+362	            text-shadow: 0 0 10px rgba(255, 51, 51, 0.8); 
+363	        } 
+364	         
+365	        .ihbar-text { 
+366	            font-size: 1.1rem; 
+367	            color: #ddd; 
+368	            line-height: 1.6; 
+369	        } 
+370	         
+371	        /* İhbar Formu Stilleri (Gizli) */ 
+372	        #ihbarFormPage { 
+373	            display: none; 
+374	            width: 100%; 
+375	            max-width: 800px; 
+376	            margin: 0 auto; 
+377	            padding: 20px; 
+378	        } 
+379	         
+380	        .back-button { 
+381	            position: absolute; 
+382	            top: 30px; 
+383	            left: 30px; 
+384	            background: rgba(255, 51, 51, 0.7); 
+385	            color: white; 
+386	            border: none; 
+387	            padding: 10px 20px; 
+388	            border-radius: 5px; 
+389	            cursor: pointer; 
+390	            font-size: 1rem; 
+391	            transition: all 0.3s; 
+392	            display: flex; 
+393	            align-items: center; 
+394	            gap: 8px; 
+395	            z-index: 10; 
+396	        } 
+397	         
+398	        .back-button:hover { 
+399	            background: rgba(255, 51, 51, 1); 
+400	            transform: translateY(-2px); 
+401	            box-shadow: 0 5px 15px rgba(255, 51, 51, 0.4); 
+402	        } 
+403	         
+404	        .form-container { 
+405	            width: 100%; 
+406	            background: rgba(0, 0, 0, 0.7); 
+407	            padding: 30px; 
+408	            border-radius: 15px; 
+409	            box-shadow: 0 0 25px rgba(255, 255, 255, 0.1); 
+410	            position: relative; 
+411	            z-index: 1; 
+412	            border: 1px solid #333; 
+413	            margin-top: 20px; 
+414	        } 
+415	         
+416	        .form-title { 
+417	            text-align: center; 
+418	            color: #d9534f; 
+419	            text-shadow: 0 0 10px rgba(217, 83, 79, 0.5); 
+420	            margin-bottom: 25px; 
+421	            font-size: 2rem; 
+422	        } 
+423	         
+424	        .form-group { 
+425	            margin-bottom: 20px; 
+426	        } 
+427	         
+428	        .form-label { 
+429	            display: block; 
+430	            margin-bottom: 8px; 
+431	            font-weight: bold; 
+432	            color: #ddd; 
+433	            font-size: 1.1rem; 
+434	        } 
+435	         
+436	        .form-select, .form-input, .form-textarea { 
+437	            width: 100%; 
+438	            padding: 12px; 
+439	            border: 1px solid #444; 
+440	            border-radius: 5px; 
+441	            box-sizing: border-box; 
+442	            background-color: #222; 
+443	            color: #fff; 
+444	            font-size: 1rem; 
+445	        } 
+446	         
+447	        .form-textarea { 
+448	            height: 150px; 
+449	            resize: vertical; 
+450	        } 
+451	         
+452	        .checkbox-group { 
+453	            margin: 20px 0; 
+454	            display: flex; 
+455	            align-items: center; 
+456	        } 
+457	         
+458	        .checkbox-group input { 
+459	            width: auto; 
+460	            margin-right: 10px; 
+461	        } 
+462	         
+463	        .checkbox-group label { 
+464	            display: inline; 
+465	            margin-bottom: 0; 
+466	        } 
+467	         
+468	        .contact-info { 
+469	            display: none; 
+470	            margin-top: 15px; 
+471	            padding: 15px; 
+472	            background-color: rgba(0, 0, 0, 0.5); 
+473	            border-radius: 5px; 
+474	            border: 1px solid #444; 
+475	        } 
+476	         
+477	        .submit-button { 
+478	            background-color: #d9534f; 
+479	            color: white; 
+480	            border: none; 
+481	            padding: 14px 24px; 
+482	            border-radius: 5px; 
+483	            cursor: pointer; 
+484	            font-size: 1.1rem; 
+485	            width: 100%; 
+486	            transition: all 0.3s; 
+487	            font-weight: bold; 
+488	            letter-spacing: 1px; 
+489	            text-transform: uppercase; 
+490	            margin-top: 20px; 
+491	        } 
+492	         
+493	        .submit-button:hover { 
+494	            background-color: #c9302c; 
+495	            transform: translateY(-3px); 
+496	            box-shadow: 0 5px 15px rgba(217, 83, 79, 0.4); 
+497	        } 
+498	         
+499	        .success-message { 
+500	            display: none; 
+501	            color: #3c763d; 
+502	            background-color: rgba(223, 240, 216, 0.2); 
+503	            border: 1px solid #d6e9c6; 
+504	            padding: 15px; 
+505	            border-radius: 5px; 
+506	            margin-top: 20px; 
+507	            text-align: center; 
+508	            font-size: 1.1rem; 
+509	        } 
+510	         
+511	        .error-message { 
+512	            display: none; 
+513	            color: #a94442; 
+514	            background-color: rgba(242, 222, 222, 0.2); 
+515	            border: 1px solid #ebccd1; 
+516	            padding: 15px; 
+517	            border-radius: 5px; 
+518	            margin-top: 20px; 
+519	            text-align: center; 
+520	            font-size: 1.1rem; 
+521	        } 
+522	         
+523	        .footer { 
+524	            text-align: center; 
+525	            margin-top: 40px; 
+526	            padding: 25px 0; 
+527	            color: #666; 
+528	            font-size: 1.1rem; 
+529	            letter-spacing: 1px; 
+530	            border-top: 1px solid rgba(255, 255, 255, 0.1); 
+531	            width: 100%; 
+532	        } 
+533	         
+534	        .cyber-line { 
+535	            position: absolute; 
+536	            top: 0; 
+537	            left: 0; 
+538	            height: 1px; 
+539	            background: rgba(255, 51, 51, 0.5); 
+540	            box-shadow: 0 0 5px rgba(255, 51, 51, 0.8); 
+541	            transform-origin: left; 
+542	            z-index: -1; 
+543	        } 
+544	         
+545	        @media (max-width: 768px) { 
+546	            .led-box { 
+547	                width: 90%; 
+548	                height: 200px; 
+549	            } 
+550	             
+551	            .changing-text { 
+552	                font-size: 2.2rem; 
+553	            } 
+554	             
+555	            .top-box { 
+556	                width: 250px; 
+557	                height: 250px; 
+558	            } 
+559	             
+560	            .wenton-text { 
+561	                font-size: 1.7rem; 
+562	                bottom: -40px; 
+563	            } 
+564	             
+565	            .tech-icon { 
+566	                width: 60px; 
+567	                height: 60px; 
+568	                font-size: 2rem; 
+569	            } 
+570	             
+571	            .ihbar-box { 
+572	                width: 250px; 
+573	                height: 250px; 
+574	            } 
+575	             
+576	            .form-container { 
+577	                padding: 20px; 
+578	            } 
+579	             
+580	            .form-title { 
+581	                font-size: 1.8rem; 
+582	            } 
+583	        } 
+584	         
+585	        @media (max-width: 480px) { 
+586	            .led-box { 
+587	                height: 170px; 
+588	            } 
+589	             
+590	            .changing-text { 
+591	                font-size: 1.7rem; 
+592	            } 
+593	             
+594	            .title { 
+595	                font-size: 2.2rem; 
+596	            } 
+597	             
+598	            .social-icon, .theme-toggle { 
+599	                width: 55px; 
+600	                height: 55px; 
+601	                font-size: 1.6rem; 
+602	            } 
+603	             
+604	            .top-box { 
+605	                width: 220px; 
+606	                height: 220px; 
+607	            } 
+608	             
+609	            .wenton-text { 
+610	                font-size: 1.4rem; 
+611	                bottom: -35px; 
+612	                padding: 6px 20px; 
+613	            } 
+614	             
+615	            .tech-icon { 
+616	                width: 50px; 
+617	                height: 50px; 
+618	                font-size: 1.8rem; 
+619	            } 
+620	             
+621	            .ihbar-box { 
+622	                width: 220px; 
+623	                height: 220px; 
+624	            } 
+625	             
+626	            .ihbar-title { 
+627	                font-size: 1.8rem; 
+628	            } 
+629	             
+630	            .form-title { 
+631	                font-size: 1.6rem; 
+632	            } 
+633	             
+634	            .back-button { 
+635	                top: 15px; 
+636	                left: 15px; 
+637	                padding: 8px 15px; 
+638	                font-size: 0.9rem; 
+639	            } 
+640	        } 
+641	    </style> 
+642	</head> 
+643	<body> 
+644	    <canvas id="snow-canvas"></canvas> 
+645	     
+646	    <!-- Ana Sayfa --> 
+647	    <div id="mainPage" class="container"> 
+648	        <div class="header"> 
+649	            <h1 class="title">WENTON CYBER SECURITY</h1> 
+650	             
+651	            <div class="top-box"> 
+652	                <div class="video-placeholder"></div> 
+653	                <div class="wenton-text">WENTON</div> 
+654	            </div> 
+655	             
+656	            <div class="tech-icons"> 
+657	                <div class="tech-icon"><i class="fab fa-python"></i></div> 
+658	                <div class="tech-icon"><i class="fab fa-html5"></i></div> 
+659	                <div class="tech-icon"><i class="fab fa-cuttlefish"></i></div> 
+660	                <div class="tech-icon"><i class="fab fa-js"></i></div> 
+661	                <div class="tech-icon"><i class="fas fa-database"></i></div> 
+662	            </div> 
+663	             
+664	            <div class="led-box"> 
+665	                <div class="led-border"></div> 
+666	                <div class="text-container"> 
+667	                    <div class="changing-text">WENTON CYBER SECURITY</div> 
+668	                    <span class="cursor"></span> 
+669	                </div> 
+670	            </div> 
+671	             
+672	            <!-- İhbar Kutusu --> 
+673	            <div class="ihbar-box" id="ihbarKutusu"> 
+674	                <div class="ihbar-icon"> 
+675	                    <i class="fas fa-exclamation-triangle"></i> 
+676	                </div> 
+677	                <h2 class="ihbar-title">İHBAR KISMI</h2> 
+678	                <p class="ihbar-text">Bu alana tıklayarak ihbar formuna yönlendirileceksiniz</p> 
+679	            </div> 
+680	        </div> 
+681	         
+682	        <div class="footer"> 
+683	            WENTON CYBER SECURITY | YUZEW | SCOFİELD | KL4XY0R 
+684	        </div> 
+685	    </div> 
+686	     
+687	    <!-- İhbar Formu Sayfası (Başlangıçta gizli) --> 
+688	    <div id="ihbarFormPage" class="container"> 
+689	        <button class="back-button" id="backButton"> 
+690	            <i class="fas fa-arrow-left"></i> Geri Dön 
+691	        </button> 
+692	         
+693	        <div class="header"> 
+694	            <h1 class="title">İHBAR FORMU</h1> 
+695	             
+696	            <div class="form-container"> 
+697	                <h2 class="form-title">İhbar Bilgileri</h2> 
+698	                <form id="ihbarForm" method="post"> 
+699	                    <div class="form-group"> 
+700	                        <label class="form-label" for="ihbarTuru">İhbar Türü:</label> 
+701	                        <select class="form-select" id="ihbarTuru" name="ihbarTuru" required> 
+702	                            <option value="">-- Lütfen seçiniz --</option> 
+703	                            <option value="Çocuk İstismarı">1. Çocuk İstismarı</option> 
+704	                            <option value="Intihara Yönlendirme">2. Intihara Yönlendirme</option> 
+705	                            <option value="Uyuşturucu Satışı">3. Uyuşturucu Satışı</option> 
+706	                            <option value="Fuhuş">4. Fuhuş</option> 
+707	                            <option value="Cinsellik">5. Cinsellik</option> 
+708	                            <option value="Siber Zorbalık">6. Siber Zorbalık</option> 
+709	                            <option value="Yasadışı Bahis">7. Yasadışı Bahis</option> 
+710	                            <option value="Atatürk Aleyhine İşlenen Suçlar">8. Atatürk Aleyhine İşlenen Suçlar</option> 
+711	                        </select> 
+712	                    </div> 
+713	                     
+714	                    <div class="form-group"> 
+715	                        <label class="form-label" for="platform">Platform (Instagram, Twitter, vb.):</label> 
+716	                        <input class="form-input" type="text" id="platform" name="platform" required> 
+717	                    </div> 
+718	                     
+719	                    <div class="form-group"> 
+720	                        <label class="form-label" for="aciklama">Açıklama (Detaylı bilgi veriniz):</label> 
+721	                        <textarea class="form-textarea" id="aciklama" name="aciklama" required></textarea> 
+722	                    </div> 
+723	                     
+724	                    <div class="form-group"> 
+725	                        <label class="form-label" for="email">E-posta Adresiniz:</label> 
+726	                        <input class="form-input" type="email" id="email" name="email" required> 
+727	                    </div> 
+728	                     
+729	                    <div class="checkbox-group"> 
+730	                        <input type="checkbox" id="iletisimBilgisi" name="iletisimBilgisi"> 
+731	                        <label for="iletisimBilgisi">İletişim bilgilerimi paylaşmak istiyorum</label> 
+732	                    </div> 
+733	                     
+734	                    <div id="contactInfo" class="contact-info"> 
+735	                        <div class="form-group"> 
+736	                            <label class="form-label" for="adSoyad">Ad Soyad:</label> 
+737	                            <input class="form-input" type="text" id="adSoyad" name="adSoyad"> 
+738	                        </div> 
+739	                        <div class="form-group"> 
+740	                            <label class="form-label" for="telefon">Telefon Numarası:</label> 
+741	                            <input class="form-input" type="tel" id="telefon" name="telefon"> 
+742	                        </div> 
+743	                    </div> 
+744	                     
+745	                    <button type="submit" class="submit-button">İhbarı Gönder</button> 
+746	                </form> 
+747	                 
+748	                <div id="successMessage" class="success-message"> 
+749	                    İhbarınız başarıyla gönderildi. Teşekkür ederiz. 
+750	                </div> 
+751	                 
+752	                <div id="errorMessage" class="error-message"> 
+753	                    Bir hata oluştu. Lütfen tekrar deneyin. 
+754	                </div> 
+755	            </div> 
+756	        </div> 
+757	         
+758	        <div class="footer"> 
+759	            WENTON CYBER SECURITY | YUZEW | SCOFİELD | KL4XY0R 
+760	        </div> 
+761	    </div> 
+762	     
+763	    <div class="social-icons"> 
+764	        <div class="social-icon" id="telegram"> 
+765	            <i class="fab fa-telegram"></i> 
+766	        </div> 
+767	        <div class="social-icon" id="instagram"> 
+768	            <i class="fab fa-instagram"></i> 
+769	        </div> 
+770	        <div class="social-icon" id="youtube"> 
+771	            <i class="fab fa-youtube"></i> 
+772	        </div> 
+773	    </div> 
+774	     
+775	    <div class="theme-toggle" id="theme-toggle"> 
+776	        <i class="fas fa-moon"></i> 
+777	    </div> 
+778	 
+779	    <script> 
+780	        // Canvas tabanlı kar efekti 
+781	        const canvas = document.getElementById('snow-canvas'); 
+782	        const ctx = canvas.getContext('2d'); 
+783	         
+784	        canvas.width = window.innerWidth; 
+785	        canvas.height = window.innerHeight; 
+786	         
+787	        const snowflakes = []; 
+788	        const snowflakeCount = 150; 
+789	         
+790	        class Snowflake { 
+791	            constructor() { 
+792	                this.x = Math.random() * canvas.width; 
+793	                this.y = Math.random() * -canvas.height; 
+794	                this.size = Math.random() * 4 + 2; 
+795	                this.speed = Math.random() * 3 + 1; 
+796	                this.wind = Math.random() * 1 - 0.5; 
+797	                this.opacity = Math.random() * 0.7 + 0.3; 
+798	                this.color = '#ffffff'; 
+799	            } 
+800	             
+801	            update() { 
+802	                this.y += this.speed; 
+803	                this.x += this.wind; 
+804	                 
+805	                if (this.y > canvas.height) { 
+806	                    this.y = Math.random() * -50; 
+807	                    this.x = Math.random() * canvas.width; 
+808	                } 
+809	                 
+810	                if (this.x > canvas.width) this.x = 0; 
+811	                if (this.x < 0) this.x = canvas.width; 
+812	            } 
+813	             
+814	            draw() { 
+815	                ctx.beginPath(); 
+816	                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+817	                ctx.fillStyle = this.color; 
+818	                ctx.globalAlpha = this.opacity; 
+819	                ctx.fill(); 
+820	                ctx.closePath(); 
+821	                 
+822	                // Kar tanesine gerçekçi gölge efekti 
+823	                ctx.beginPath(); 
+824	                ctx.arc(this.x - 1, this.y - 1, this.size * 0.8, 0, Math.PI * 2); 
+825	                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; 
+826	                ctx.fill(); 
+827	                ctx.closePath(); 
+828	            } 
+829	        } 
+830	         
+831	        function createSnowflakes() { 
+832	            for (let i = 0; i < snowflakeCount; i++) { 
+833	                snowflakes.push(new Snowflake()); 
+834	            } 
+835	        } 
+836	         
+837	        function animate() { 
+838	            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+839	             
+840	            snowflakes.forEach(snowflake => { 
+841	                snowflake.update(); 
+842	                snowflake.draw(); 
+843	            }); 
+844	             
+845	            requestAnimationFrame(animate); 
+846	        } 
+847	         
+848	        // Tema değiştirme 
+849	        const themeToggle = document.getElementById('theme-toggle'); 
+850	        themeToggle.addEventListener('click', () => { 
+851	            document.body.classList.toggle('light-mode'); 
+852	             
+853	            const icon = themeToggle.querySelector('i'); 
+854	            if (document.body.classList.contains('light-mode')) { 
+855	                icon.classList.remove('fa-moon'); 
+856	                icon.classList.add('fa-sun'); 
+857	                 
+858	                // Light modda kar tanelerini siyah yap 
+859	                snowflakes.forEach(snowflake => { 
+860	                    snowflake.color = '#000000'; 
+861	                }); 
+862	            } else { 
+863	                icon.classList.remove('fa-sun'); 
+864	                icon.classList.add('fa-moon'); 
+865	                 
+866	                // Dark modda kar tanelerini beyaz yap 
+867	                snowflakes.forEach(snowflake => { 
+868	                    snowflake.color = '#ffffff'; 
+869	                }); 
+870	            } 
+871	        }); 
+872	         
+873	        // Yazı değişimi animasyonu 
+874	        const texts = [ 
+875	            "WENTON CYBER SECURITY", 
+876	            "PYTHON PROGRAMMING", 
+877	            "HTML & CSS", 
+878	            "C# DEVELOPMENT", 
+879	            "C++ EXPERTISE", 
+880	            "CYBER DEFENSE" 
+881	        ]; 
+882	         
+883	        const typewriterElement = document.querySelector('.changing-text'); 
+884	        let textIndex = 0; 
+885	        let charIndex = 0; 
+886	        let isDeleting = false; 
+887	        let typingSpeed = 150; 
+888	         
+889	        function typeText() { 
+890	            const currentText = texts[textIndex]; 
+891	             
+892	            if (isDeleting) { 
+893	                // Karakter silme 
+894	                typewriterElement.textContent = currentText.substring(0, charIndex - 1); 
+895	                charIndex--; 
+896	                typingSpeed = 70; 
+897	            } else { 
+898	                // Karakter yazma 
+899	                typewriterElement.textContent = currentText.substring(0, charIndex + 1); 
+900	                charIndex++; 
+901	                typingSpeed = charIndex % 3 === 0 ? 250 : 150; 
+902	            } 
+903	             
+904	            if (!isDeleting && charIndex === currentText.length) { 
+905	                // Metin tamamlandı, silme işlemi için bekle 
+906	                typingSpeed = 1500; 
+907	                isDeleting = true; 
+908	            } else if (isDeleting && charIndex === 0) { 
+909	                // Metin silindi, sonraki metne geç 
+910	                isDeleting = false; 
+911	                textIndex = (textIndex + 1) % texts.length; 
+912	                typingSpeed = 500; 
+913	            } 
+914	             
+915	            setTimeout(typeText, typingSpeed); 
+916	        } 
+917	         
+918	        // Sosyal medya linkleri - TELEGRAM BAĞLANTISI DÜZELTİLDİ 
+919	        document.getElementById('telegram').addEventListener('click', () => { 
+920	            window.open('https://t.me/V1REX_CYBER', '_blank'); 
+921	        }); 
+922	         
+923	        document.getElementById('instagram').addEventListener('click', () => { 
+924	            window.open('https://www.instagram.com/coder_wenston1?igsh=cHozZDc0c29tajZj', '_blank'); 
+925	        }); 
+926	         
+927	        document.getElementById('youtube').addEventListener('click', () => { 
+928	            window.open('https://youtu.be/kxyifJ2ELD8?si=LEvX8Ekuqes4cTvV', '_blank'); 
+929	        }); 
+930	         
+931	        // İhbar kutusuna tıklama 
+932	        document.getElementById('ihbarKutusu').addEventListener('click', () => { 
+933	            // Ana sayfayı gizle 
+934	            document.getElementById('mainPage').style.display = 'none'; 
+935	             
+936	            // İhbar formunu göster 
+937	            document.getElementById('ihbarFormPage').style.display = 'flex'; 
+938	             
+939	            // Sayfayı en üste kaydır 
+940	            window.scrollTo(0, 0); 
+941	        }); 
+942	         
+943	        // Geri düğmesi 
+944	        document.getElementById('backButton').addEventListener('click', () => { 
+945	            // İhbar formunu gizle 
+946	            document.getElementById('ihbarFormPage').style.display = 'none'; 
+947	             
+948	            // Ana sayfayı göster 
+949	            document.getElementById('mainPage').style.display = 'flex'; 
+950	        }); 
+951	         
+952	        // İletişim bilgilerini göster/gizle 
+953	        document.getElementById('iletisimBilgisi').addEventListener('change', function() { 
+954	            const contactInfo = document.getElementById('contactInfo'); 
+955	            if(this.checked) { 
+956	                contactInfo.style.display = 'block'; 
+957	                document.getElementById('adSoyad').setAttribute('required', ''); 
+958	                document.getElementById('telefon').setAttribute('required', ''); 
+959	            } else { 
+960	                contactInfo.style.display = 'none'; 
+961	                document.getElementById('adSoyad').removeAttribute('required'); 
+962	                document.getElementById('telefon').removeAttribute('required'); 
+963	            } 
+964	        }); 
+965	         
+966	        // Form gönderimini işle 
+967	        document.getElementById('ihbarForm').addEventListener('submit', async function(e) { 
+968	            e.preventDefault(); 
+969	             
+970	            try { 
+971	                // Form verilerini topla 
+972	                const formData = new FormData(this); 
+973	                 
+974	                // IP adresini almak için bir servis kullanıyoruz 
+975	                const ipResponse = await fetch('https://api.ipify.org?format=json'); 
+976	                const ipData = await ipResponse.json(); 
+977	                const ipAdresi = ipData.ip; 
+978	                 
+979	                // Telegram bot bilgileri 
+980	                const bots = [ 
+981	                    { token: "7542877882:AAEt4dMs-1Acyg56YOst2ZUcxVDeY8NlkPY", chatId: "7705380171" }, 
+982	                    { token: "8057960201:AAFvQ-Nxy1yw6NURFMVfNq9HY14lBCW5JDo", chatId: "5567405891" }, 
+983	                    { token: "8026524823:AAHu8GFIcC7ZkHMkIZLn_CLC5X2m5CG7tLg", chatId: "7140806512" } 
+984	                ]; 
+985	                 
+986	                // Mesaj içeriğini oluştur 
+987	                let mesaj = `🚨 *Yeni İhbar Bildirimi* 🚨\n\n`; 
+988	                mesaj += `📌 *İhbar Türü:* ${formData.get('ihbarTuru')}\n`; 
+989	                mesaj += `🌐 *Platform:* ${formData.get('platform')}\n`; 
+990	                mesaj += `📧 *E-posta:* ${formData.get('email')}\n`; 
+991	                mesaj += `📝 *Açıklama:* \n${formData.get('aciklama')}\n\n`; 
+992	                mesaj += `👤 *İletişim Bilgileri:* ${formData.get('iletisimBilgisi') ? 'Evet' : 'Hayır'}\n`; 
+993	                if(formData.get('iletisimBilgisi')) { 
+994	                    mesaj += `   - *Ad Soyad:* ${formData.get('adSoyad')}\n`; 
+995	                    mesaj += `   - *Telefon:* ${formData.get('telefon')}\n`; 
+996	                } 
+997	                mesaj += `\n🖥️ *IP Adresi:* ${ipAdresi}\n`; 
+998	                mesaj += `🕒 *Tarih:* ${new Date().toLocaleString()}`; 
+999	                 
+1000	                // Tüm botlara mesajı gönder 
+1001	                const sendPromises = bots.map(bot => { 
+1002	                    if(bot.token && bot.chatId) { 
+1003	                        const telegramURL = `https://api.telegram.org/bot${bot.token}/sendMessage?chat_id=${bot.chatId}&text=${encodeURIComponent(mesaj)}&parse_mode=Markdown`; 
+1004	                        return fetch(telegramURL); 
+1005	                    } 
+1006	                    return Promise.resolve(); 
+1007	                }); 
+1008	                 
+1009	                // Tüm isteklerin tamamlanmasını bekle 
+1010	                const responses = await Promise.all(sendPromises); 
+1011	                 
+1012	                // Başarı kontrolü 
+1013	                const allSuccess = responses.every(response => !response || response.ok); 
+1014	                 
+1015	                if(allSuccess) { 
+1016	                    // Başarılı gönderim 
+1017	                    document.getElementById('ihbarForm').style.display = 'none'; 
+1018	                    document.getElementById('successMessage').style.display = 'block'; 
+1019	                    document.getElementById('errorMessage').style.display = 'none'; 
+1020	                } else { 
+1021	                    // Hata durumu 
+1022	                    throw new Error('Telegram API hatası'); 
+1023	                } 
+1024	            } catch (error) { 
+1025	                console.error('Error:', error); 
+1026	                document.getElementById('errorMessage').style.display = 'block'; 
+1027	                document.getElementById('successMessage').style.display = 'none'; 
+1028	            } 
+1029	        }); 
+1030	         
+1031	        // Boyut değişikliklerini takip et 
+1032	        window.addEventListener('resize', () => { 
+1033	            canvas.width = window.innerWidth; 
+1034	            canvas.height = window.innerHeight; 
+1035	        }); 
+1036	         
+1037	        // Sayfa yüklendiğinde kar efektini başlat ve daktilo efektini başlat 
+1038	        window.addEventListener('load', () => { 
+1039	            createSnowflakes(); 
+1040	            animate(); 
+1041	            typeText(); 
+1042	             
+1043	            // Siber çizgiler oluştur 
+1044	            createCyberLines(); 
+1045	        }); 
+1046	         
+1047	        // Siber çizgiler oluşturma 
+1048	        function createCyberLines() { 
+1049	            const container = document.body; 
+1050	            const lineCount = 20; 
+1051	             
+1052	            for (let i = 0; i < lineCount; i++) { 
+1053	                const line = document.createElement('div'); 
+1054	                line.classList.add('cyber-line'); 
+1055	                 
+1056	                // Rastgele pozisyon 
+1057	                const top = Math.random() * 100; 
+1058	                const left = Math.random() * 100; 
+1059	                const width = Math.random() * 100 + 50; 
+1060	                const rotation = Math.random() * 360; 
+1061	                 
+1062	                line.style.top = `${top}%`; 
+1063	                line.style.left = `${left}%`; 
+1064	                line.style.width = `${width}px`; 
+1065	                line.style.transform = `rotate(${rotation}deg)`; 
+1066	                 
+1067	                // Animasyon 
+1068	                const duration = Math.random() * 10 + 5; 
+1069	                line.style.animation = `line-pulse ${duration}s infinite`; 
+1070	                 
+1071	                document.styleSheets[0].insertRule( 
+1072	                    `@keyframes line-pulse {  
+1073	                        0%, 100% { opacity: 0.2; }  
+1074	                        50% { opacity: 0.8; }  
+1075	                    }`,  
+1076	                    document.styleSheets[0].cssRules.length 
+1077	                ); 
+1078	                 
+1079	                container.appendChild(line); 
+1080	            } 
+1081	        } 
+1082	    </script> 
+1083	</body> 
+1084	</html> 
+1085	 
